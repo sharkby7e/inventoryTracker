@@ -7,7 +7,7 @@ const path = require("path");
 connection.sync({ force: false }).then(() => console.log("database ready"));
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -15,4 +15,4 @@ app.use(express.static("public"));
 
 app.use(routes);
 
-app.listen(port, () => console.log("Running server on port " + port));
+app.listen(PORT, () => console.log("Running server on port " + PORT));
