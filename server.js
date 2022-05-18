@@ -1,6 +1,6 @@
 const express = require("express");
 const connection = require("./config/connection");
-const { Product, Warehouse } = require("./models");
+// const { Product, Warehouse } = require("./models");
 const routes = require("./controllers");
 const path = require("path");
 
