@@ -36,7 +36,7 @@ const display = (data) => {
   for (let i = 0; i < data.length; i++) {
     const { name, description, warehouse } = data[i];
     const newLi = document.createElement("li");
-    newLi.textContent = `${name} - ${description} Warehouse: ${warehouse.location}`;
+    newLi.textContent = `${name} - ${description} // Warehouse: ${warehouse.location}`;
     list.append(newLi);
   }
 };
