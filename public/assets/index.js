@@ -1,5 +1,6 @@
 console.log("script is linked");
 
+// selecting elements from page
 const prodName = document.querySelector("#productName");
 const desc = document.querySelector("#desc");
 const submit = document.querySelector("#submit");
@@ -7,7 +8,10 @@ const all = document.querySelector("#all");
 const list = document.querySelector("#list");
 const warehouses = document.querySelector("#warehouses");
 const stockStr = document.querySelector("#stock");
+const whListOpts = document.querySelector("#whListOpts");
+const whList = document.querySelector("#whList");
 
+// add to db handler
 const addDb = async (e) => {
   e.preventDefault();
   const name = prodName.value.trim();
@@ -33,14 +37,19 @@ const addDb = async (e) => {
   }
 };
 
-const getAll = async (e) => {
-  e.preventDefault();
+// get all products on page load
+const getProducts = async () => {
   const getAll = await fetch("api/products", {
     method: "GET",
   });
-  getAll.json().then((data) => display(data));
+  if (getAll.ok) {
+    getAll.json().then((data) => display(data));
+  } else {
+    alert("");
+  }
 };
 
+// add products from fetch to list on page load
 const display = (data) => {
   list.innerHTML = "";
   console.log(data);
@@ -48,23 +57,30 @@ const display = (data) => {
     const { id, stock, name, description, warehouse } = data[i];
     const newLi = document.createElement("li");
     newLi.textContent = `${name} - ${description} ///
-      Warehouse: ${warehouse.location} ///   
-      Current Stock: ${stock}   `;
+      Warehouse: ${warehouse.location} ///   `;
+
+    const newInput = document.createElement("input");
+    const newLabel = document.createElement("label");
+    newLabel.textContent = "Current Stock: ";
+    newInput.setAttribute("value", stock);
+    newLi.append(newLabel);
+    newLi.append(newInput);
+
+    const newUp = document.createElement("button");
+    newUp.setAttribute("up-id", `${id}`);
+    newUp.textContent = "Update Stock";
+    newLi.append(newUp);
 
     const newDl = document.createElement("button");
     newDl.setAttribute("del-id", `${id}`);
     newDl.textContent = "Delete";
     newLi.append(newDl);
 
-    const newUp = document.createElement("button");
-    newUp.setAttribute("up-id", `${id}`);
-    newUp.textContent = "Update";
-    newLi.append(newUp);
-
     list.append(newLi);
   }
 };
 
+// handler to route to updateFetch or deleteFetch functions
 const upDel = (e) => {
   e.preventDefault();
   if (e.target.hasAttribute("del-id")) {
@@ -73,36 +89,46 @@ const upDel = (e) => {
   }
   if (e.target.hasAttribute("up-id")) {
     const id = e.target.getAttribute("up-id");
-    updateFetch(id);
+    const val = parseInt(e.target.previousSibling.value.trim());
+    if (val && id) {
+      updateFetch(val, id);
+    } else {
+      alert("Please update stock with a number!");
+    }
   }
 };
 
-// const updateFetch = async (id) => {
-//   const res = await fetch("/api/products", {
-//     method: "PUT",
-//     body: JSON.stringify({ name, description }),
-//     headers: { "Content-Type": "application/json" },
-//   });
-//   if (res.ok) {
-//     alert(`${name} added to the database`);
-//     document.location.reload();
-//   } else {
-//     alert("Error Adding product to Database");
-//   }
-// }
+// updates stock
+const updateFetch = async (val, id) => {
+  console.log(val, id);
+  const stock = val;
+  const res = await fetch(`/api/products/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ stock }),
+    headers: { "Content-Type": "application/json" },
+  });
+  if (res.ok) {
+    alert(`Stock updated!`);
+    document.location.reload();
+  } else {
+    alert("Error Adding product to Database");
+  }
+};
 
+//deletes item from db
 const deleteFetch = async (id) => {
   const res = await fetch(`/api/products/${id}`, {
     method: "DELETE",
   });
   if (res.ok) {
-    alert(`Item deleted from the database`);
+    alert(`Item deleted from the database!`);
     document.location.reload();
   } else {
-    alert("Error deleting product from Database");
+    alert("Error deleting product from Database!");
   }
 };
 
+// gets warehouses from db,
 const getWarehouses = async () => {
   const res = await fetch(`api/warehouses`, {
     method: "GET",
@@ -110,6 +136,7 @@ const getWarehouses = async () => {
   res.json().then((data) => populateDropdown(data));
 };
 
+//populates the two dropdowns
 const populateDropdown = (arr) => {
   for (var i = 0; i < arr.length; i++) {
     const { location, id } = arr[i];
@@ -120,8 +147,12 @@ const populateDropdown = (arr) => {
   }
 };
 
-getWarehouses();
-
-all.addEventListener("click", getAll);
+//Event listeners
 submit.addEventListener("click", addDb);
 list.addEventListener("click", upDel);
+
+const init = () => {
+  getWarehouses();
+  getProducts();
+};
+init();
