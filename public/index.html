@@ -9,12 +9,20 @@
     <h1>Welcome to your Inventory</h1>
     <form>
       <label for="productName">Product Name</label><br />
-      <input type="text" id="productName" name="productName" /><br />
-      <label for="lname">Product Description</label><br />
-      <input type="text" id="desc" name="desc" /><br />
+      <input type="text" id="productName" name="productName" /><br /><br />
+      <label for="desc">Product Description</label><br />
+      <input type="text" id="desc" name="desc" /><br /><br />
+      <label for="stock">Current Stock</label><br />
+      <input type="text" id="stock" name="stock" /><br /><br />
+      <label for="warehouses">Select Warehouse</label><br />
+      <select id="warehouses">
+      </select></br><br />
+
       <input type="submit" id="submit" value="Add to Database" />
     </form>
+    <!-- <a href="/api/products"> -->
     <button id="all" type="button">See all Products</button>
+    <!-- </a> -->
     <ul id="list"></ul>
 
     <script src="assets/index.js"></script>

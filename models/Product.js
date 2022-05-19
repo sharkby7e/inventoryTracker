@@ -19,8 +19,13 @@ Product.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    stock: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     warehouse_id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       references: {
         model: "warehouse",
         key: "id",

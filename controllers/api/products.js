@@ -27,17 +27,17 @@ router.get("/:id", async (req, res) => {
 });
 
 // update product by id
-router.put("/:id", aync, (req,res)=>{
+router.put("/:id", async (req, res) => {
   const upProd = await Product.update(
     {
-      ...req.body
+      ...req.body,
     },
     {
-      where: {id: req.params.id}
+      where: { id: req.params.id },
     }
-  )
-  res.json(upProd)
-})
+  );
+  res.json(upProd);
+});
 
 // delete product by id
 router.delete("/:id", async (req, res) => {

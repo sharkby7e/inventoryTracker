@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Warehouse } = require("../../models");
+const { Warehouse, Product } = require("../../models");
 
 //create a new warehouse
 router.post("/", async (req, res) => {
