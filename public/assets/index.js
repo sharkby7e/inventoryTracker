@@ -8,8 +8,8 @@ const all = document.querySelector("#all");
 const list = document.querySelector("#list");
 const warehouses = document.querySelector("#warehouses");
 const stockStr = document.querySelector("#stock");
-const whListOpts = document.querySelector("#whListOpts");
-const whList = document.querySelector("#whList");
+const createWH = document.querySelector("#createWH");
+const newWh = document.querySelector("#newWH");
 
 // add to db handler
 const addDb = async (e) => {
@@ -37,6 +37,27 @@ const addDb = async (e) => {
   }
 };
 
+//add warehouse handler
+const addWh = async (e) => {
+  e.preventDefault();
+  const location = newWh.value.trim();
+  if (location) {
+    const wh = await fetch("api/warehouses", {
+      method: "POST",
+      body: JSON.stringify({ location }),
+      headers: { "Content-Type": "application/json" },
+    });
+    if (wh.ok) {
+      alert(`New warehouse in ${location} created`);
+      document.location.reload();
+    } else {
+      alert("Error adding warehouse, please try again!");
+    }
+  } else {
+    alert("Please ensure Location name given");
+  }
+};
+
 // get all products on page load
 const getProducts = async () => {
   const getAll = await fetch("api/products", {
@@ -52,7 +73,6 @@ const getProducts = async () => {
 // add products from fetch to list on page load
 const display = (data) => {
   list.innerHTML = "";
-  console.log(data);
   for (let i = 0; i < data.length; i++) {
     const { id, stock, name, description, warehouse } = data[i];
     const newLi = document.createElement("li");
@@ -100,7 +120,6 @@ const upDel = (e) => {
 
 // updates stock
 const updateFetch = async (val, id) => {
-  console.log(val, id);
   const stock = val;
   const res = await fetch(`/api/products/${id}`, {
     method: "PUT",
@@ -150,6 +169,7 @@ const populateDropdown = (arr) => {
 //Event listeners
 submit.addEventListener("click", addDb);
 list.addEventListener("click", upDel);
+createWH.addEventListener("submit", addWh);
 
 const init = () => {
   getWarehouses();
